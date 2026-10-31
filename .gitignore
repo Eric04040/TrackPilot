@@ -1,0 +1,16 @@
+# Betriebssystem
+.DS_Store
+._*
+Thumbs.db
+desktop.ini
+
+# Editoren
+.vscode/
+.idea/
+*.swp
+*~
+
+# Pakete
+*.zip
+*.crx
+*.pem

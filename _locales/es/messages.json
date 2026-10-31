@@ -1,0 +1,18 @@
+{
+  "extName": {
+    "message": "TrackPilot",
+    "description": "Name der Erweiterung"
+  },
+  "extDesc": {
+    "message": "Panel lateral no oficial para Bandcamp: encuentra fans con tus gustos y música nueva en sus compras. Todo se queda en local.",
+    "description": "Beschreibung im Store und unter chrome://extensions (max. 132 Zeichen)"
+  },
+  "actionTitle": {
+    "message": "Abrir TrackPilot",
+    "description": "Tooltip des Symbols in der Symbolleiste"
+  },
+  "cmdToggle": {
+    "message": "Mostrar/ocultar TrackPilot",
+    "description": "Tastenkürzel Alt+T"
+  }
+}

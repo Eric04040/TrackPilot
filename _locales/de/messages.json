@@ -1,0 +1,18 @@
+{
+  "extName": {
+    "message": "TrackPilot",
+    "description": "Name der Erweiterung"
+  },
+  "extDesc": {
+    "message": "Inoffizielle Seitenleiste für Bandcamp: findet Fans mit deinem Geschmack und neue Musik aus ihren Käufen. Alles bleibt lokal.",
+    "description": "Beschreibung im Store und unter chrome://extensions (max. 132 Zeichen)"
+  },
+  "actionTitle": {
+    "message": "TrackPilot öffnen",
+    "description": "Tooltip des Symbols in der Symbolleiste"
+  },
+  "cmdToggle": {
+    "message": "TrackPilot ein-/ausblenden",
+    "description": "Tastenkürzel Alt+T"
+  }
+}

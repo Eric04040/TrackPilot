@@ -1,0 +1,486 @@
+:root {
+  --bg: #fbfcfd; --card: #fff; --text: #1b2227; --muted: #66727c; --line: #dde3e8;
+  --accent: #1890b0; --chip: #e6f3f7; --heart: #d6345a; --danger: #c0392b; --ok: #1e8a4c; --okbg: #e7f6ec;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --bg: #161c21; --card: #1e252b; --text: #e5eaee; --muted: #93a0aa; --line: #2b343c;
+    --accent: #38b4d6; --chip: #1c3038; --heart: #ff6b8a; --danger: #ff7b6b; --ok: #4cc47e; --okbg: #17301f; color-scheme: dark; }
+}
+:root[data-theme="dark"] { --bg: #161c21; --card: #1e252b; --text: #e5eaee; --muted: #93a0aa; --line: #2b343c;
+  --accent: #38b4d6; --chip: #1c3038; --heart: #ff6b8a; --danger: #ff7b6b; --ok: #4cc47e; --okbg: #17301f; color-scheme: dark; }
+:root[data-theme="light"] { color-scheme: light; }
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body { margin: 0; background: var(--bg); color: var(--text); font: 14px/1.4 system-ui, -apple-system, Segoe UI, sans-serif;
+  display: flex; flex-direction: column; }
+button, .filebtn { background: var(--card); color: var(--text); border: 1px solid var(--line); border-radius: 6px;
+  padding: 5px 10px; font: inherit; cursor: pointer; }
+button:hover, .filebtn:hover { border-color: var(--accent); }
+button:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+button.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+button.ghost { background: none; border-color: transparent; color: var(--muted); }
+button.danger { color: var(--danger); }
+button:disabled { opacity: .5; cursor: default; }
+input { background: var(--card); color: var(--text); border: 1px solid var(--line); border-radius: 6px; padding: 5px 8px; font: inherit; }
+a { color: var(--accent); text-decoration: none; }
+.hidden { display: none !important; }
+.muted { color: var(--muted); }
+.small { font-size: 12px; }
+.row { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+.row input { flex: 1; min-width: 0; }
+
+.top { display: flex; justify-content: space-between; align-items: center; padding: 10px 12px 6px; }
+.top b { font-size: 16px; }
+main { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+.setup { margin: 0 12px 10px; padding: 10px; border: 1px solid var(--accent); border-radius: 8px; background: var(--chip); }
+.setup p { margin: 0 0 8px; }
+
+.now { display: flex; gap: 10px; align-items: center; margin: 0 12px; padding: 10px; border-radius: 8px; background: var(--chip); }
+.now .cover { width: 52px; height: 52px; }
+.nowtxt { min-width: 0; }
+.nowtxt small { display: block; color: var(--muted); font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.nowtxt .t { font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.status { font-size: 12px; color: var(--muted); margin: 6px 12px 0; min-height: 16px; }
+
+.tabs { display: flex; margin: 8px 12px 0; border-bottom: 1px solid var(--line); }
+.tabs button { background: none; border: 0; border-bottom: 2px solid transparent; border-radius: 0; margin-bottom: -1px;
+  padding: 7px 8px; color: var(--muted); }
+.tabs button[aria-selected="true"] { color: var(--text); font-weight: 700; border-color: var(--accent); }
+.tab { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+.hint { font-size: 12px; color: var(--muted); margin: 8px 12px 2px; }
+.hintrow { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding-right: 8px; }
+.list { list-style: none; margin: 0; padding: 4px 6px 12px; overflow-y: auto; flex: 1; }
+.empty { color: var(--muted); padding: 12px 8px; }
+
+.item { display: flex; align-items: center; gap: 9px; padding: 6px; border-radius: 6px; }
+.item:hover { background: var(--chip); }
+.item .open { all: unset; cursor: pointer; display: flex; align-items: center; gap: 9px; flex: 1; min-width: 0; }
+.cover, .av { flex: none; background-size: cover; background-position: center; display: grid; place-items: center;
+  color: #fff; font-weight: 700; font-size: 12px; }
+.cover { width: 44px; height: 44px; border-radius: 3px; }
+.av { width: 36px; height: 36px; border-radius: 50%; }
+.txt { min-width: 0; flex: 1; }
+.txt .a { font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.txt .b { font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.score { font-variant-numeric: tabular-nums; font-size: 13px; font-weight: 700; color: var(--accent); flex: none; }
+.icon { background: none; border: 0; padding: 0; width: 28px; height: 28px; border-radius: 50%; flex: none;
+  display: grid; place-items: center; color: var(--muted); font-size: 15px; }
+.icon:hover { background: var(--chip); }
+.heart { font-size: 18px; }
+.heart.on { color: var(--heart); }
+.icon.x { font-size: 12px; }
+
+.settings { position: fixed; inset: 0; overflow-y: auto; background: var(--bg); padding: 12px; display: flex;
+  flex-direction: column; gap: 10px; z-index: 5; }
+.settings h3 { margin: 6px 0 0; font-size: 14px; }
+.settings label { display: flex; flex-direction: column; gap: 3px; font-size: 13px; }
+.settings label.check { flex-direction: row; align-items: center; gap: 6px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 8px; }
+.log { max-height: 160px; overflow: auto; font: 11px/1.4 ui-monospace, Consolas, monospace; color: var(--muted); white-space: pre-wrap; }
+
+.player { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-top: 1px solid var(--line); background: var(--card); }
+.pl-btn { width: 36px; height: 36px; flex: none; }
+.pl-main { flex: 1; min-width: 0; }
+.pl-top { display: flex; justify-content: space-between; gap: 8px; margin-bottom: 5px; font-size: 12px; }
+.pl-title { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pl-time { font-variant-numeric: tabular-nums; color: var(--muted); flex: none; }
+.pl-bar { position: relative; height: 8px; background: var(--line); cursor: pointer; touch-action: none; }
+.pl-buf { position: absolute; inset: 0 auto 0 0; width: 0; background: var(--muted); opacity: .45; }
+.pl-prog { position: absolute; inset: 0 auto 0 0; width: 0; background: var(--text); }
+#plFallback iframe { border: 0; width: 100%; height: 120px; display: block; }
+
+.toast { position: fixed; left: 12px; right: 12px; bottom: 70px; background: var(--text); color: var(--bg); padding: 8px 12px;
+  border-radius: 8px; font-size: 13px; z-index: 10; }
+.txt .a, .txt .b { display: block; }
+.hintrow button { white-space: nowrap; flex: none; }
+.pending { display: flex; align-items: center; gap: 8px; margin: 8px 12px 0; padding: 8px 10px; border: 1px dashed var(--accent); border-radius: 8px; }
+.pendtxt { flex: 1; min-width: 0; }
+.pendtxt small { display: block; font-size: 11px; color: var(--muted); }
+.pendtxt span { display: block; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pending button { flex: none; font-size: 12px; }
+.moreRow { display: flex; align-items: center; gap: 8px; padding: 10px 6px; flex-wrap: wrap; }
+.slider { display: flex; align-items: center; gap: 8px; margin: 4px 12px 0; font-size: 12px; color: var(--muted); }
+.slider input { flex: 1; min-width: 0; accent-color: var(--accent); }
+.slider b { color: var(--text); font-variant-numeric: tabular-nums; min-width: 28px; text-align: right; }
+.chip { font-size: 11px; padding: 2px 8px; border-radius: 10px; }
+.chip.on { background: var(--accent); border-color: var(--accent); color: #fff; }
+.chip.clear { color: var(--muted); }
+.txt .tags { display: block; font-size: 11px; color: var(--accent); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.chip.off { background: none; border-color: var(--danger); color: var(--danger); text-decoration: line-through; }
+.tagrow { display: flex; gap: 4px; margin: 6px 12px 0; }
+.tagin { flex: 1; min-width: 0; font-size: 12px; padding: 4px 8px; }
+.tagrow button { font-size: 12px; padding: 3px 8px; flex: none; }
+/* Release-Karte, „Links geöffnet“ und Fortschritt gehören zu Fan- und Trackvorschlägen, nicht zur Tracksuche nach Fans */
+body:not(.on-match):not(.on-tips) .now, body:not(.on-match):not(.on-tips) #pending, body:not(.on-match):not(.on-tips) #status { display: none !important; }
+body.on-tips .lbl-match, body:not(.on-tips) .lbl-tips { display: none; }
+.tabs button { white-space: nowrap; font-size: 12px; padding: 7px 4px; flex: 1 1 auto; }
+/* Fans, denen du schon folgst */
+.item.followed { background: var(--okbg); box-shadow: inset 3px 0 0 var(--ok); }
+/* 0.9.41: mit „Nächste 50“ neu dazugekommene Fans */
+.item.newfan:not(.followed) { background: color-mix(in srgb, var(--accent) 9%, transparent); }
+.txt .a:has(.newb) { display: flex; align-items: baseline; gap: 6px; }
+.txt .a .newb { flex: none; font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; color: var(--on-accent); background: var(--accent-strong); padding: 0 5px; border-radius: 4px; line-height: 1.5; }
+.item.followed .a, .item.followed .fol { color: var(--ok); }
+.actionrow { margin: 8px 12px 0; }
+#btnAction { display: block; width: 100%; font-size: 13px; padding: 7px 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#btnSettings { font-size: 16px; padding: 3px 8px; }
+.sethead { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.sethead h3 { margin: 0; }
+.setgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.setgrid label { justify-content: space-between; }   /* 0.9.56: Auswahlfelder unten bündig, auch wenn ein Name umbricht */
+select { background: var(--card); color: var(--text); border: 1px solid var(--line); border-radius: 6px; padding: 5px 6px; font: inherit; }
+/* laufendes Lied in der Liste; Klick auf den Player lässt es kurz aufleuchten */
+.item.playing { background: var(--chip); box-shadow: inset 3px 0 0 var(--accent); }
+.pl-top { cursor: pointer; }
+.pl-top:hover .pl-title { text-decoration: underline; }
+@keyframes tpflash { 0%, 40% { background: color-mix(in srgb, var(--accent) 35%, transparent); } 100% { background: var(--chip); } }
+.item.flash { animation: tpflash 1.6s ease-out; }
+/* Zahnrad rechts in der Reiterleiste (Chrome zeigt den Namen schon oben) */
+main { padding-top: 10px; }
+.tabs #btnSettings { flex: none; border: 0; border-radius: 6px; margin: 0 0 2px 2px; padding: 3px 6px; font-size: 15px; }
+.status:empty { display: none; }
+.tabs #btnHide { flex: none; border: 0; border-radius: 6px; margin: 0 2px 2px 0; padding: 3px 6px; font-size: 15px; }
+.keyhint { margin: 0; }
+kbd { font: 11px ui-monospace, Consolas, monospace; padding: 1px 4px; border: 1px solid var(--line); border-radius: 4px; background: var(--card); }
+/* Kopfzeile der Fanvorschläge mit Erklärung */
+.listhead { display: flex; justify-content: space-between; align-items: center; padding: 2px 6px 4px; font-size: 11px; color: var(--muted); }
+.listhead .info { background: none; border: 0; padding: 0; font-size: 11px; color: var(--muted); }
+.listhead .info:hover { color: var(--accent); }
+.score.rank { min-width: 22px; text-align: right; color: var(--muted); font-size: 12px; }
+.score.rank::before { content: "#"; opacity: .6; }
+
+/* ===================== 0.9.39 Feinschliff ===================== */
+/* Farben: Marke #1890b0 bleibt (Linien, Fokus, Balken – passt zur Lasche auf Bandcamp), dazu kontrastsichere Varianten für Text und Flächen */
+:root {
+  --accent-strong: #147c98; --on-accent: #fff; --accent-ink: #11708a; --ok: #18773f; --muted: #5d6973; --field-line: #8a96a0;
+  --hover: rgba(27, 34, 39, .05); --ring: rgba(0, 0, 0, .08);
+  --shadow: 0 1px 2px rgba(16, 32, 48, .06), 0 1px 3px rgba(16, 32, 48, .05);
+  --toast-bg: #1b2227; --toast-fg: #fff;
+  accent-color: var(--accent);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --accent-strong: #38b4d6; --on-accent: #04222c; --accent-ink: #4fc0df; --field-line: #66737e;
+    --hover: rgba(255, 255, 255, .05); --ring: rgba(255, 255, 255, .07); --shadow: none; --toast-bg: #2a343d; --toast-fg: #e5eaee; }
+}
+:root[data-theme="dark"] { --accent-strong: #38b4d6; --on-accent: #04222c; --accent-ink: #4fc0df; --field-line: #66737e;
+  --hover: rgba(255, 255, 255, .05); --ring: rgba(255, 255, 255, .07); --shadow: none; --toast-bg: #2a343d; --toast-fg: #e5eaee; }
+
+a { color: var(--accent-ink); }
+button.primary { background: var(--accent-strong); border-color: var(--accent-strong); color: var(--on-accent); font-weight: 600; box-shadow: var(--shadow); }
+button.primary:hover:not(:disabled):not([aria-disabled="true"]) { background: color-mix(in srgb, var(--accent-strong), var(--text) 14%); border-color: transparent; }
+input:not([type="checkbox"]):not([type="file"]), select { border-color: var(--field-line); transition: border-color .12s, box-shadow .12s; }
+input:not([type="checkbox"]):focus, select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 22%, transparent); }
+input::placeholder { color: var(--muted); opacity: .85; }
+
+/* Aktionsknopf: Warten füllt sich bis zur Freigabe, Suche schimmert, „fertig“ ist still – statt halber Deckkraft */
+#btnAction { height: 32px; padding: 0 12px; border-radius: 8px; font-weight: 600; font-variant-numeric: tabular-nums; transition: background-color .15s, color .15s; }
+#btnAction[aria-disabled="true"] { opacity: 1; cursor: default; box-shadow: none; background-color: var(--chip); border-color: transparent; color: var(--accent-ink); }
+#btnAction[aria-disabled="true"]:hover { border-color: transparent; }
+#btnAction[data-state="wait"] { background-repeat: no-repeat;
+  background-image: linear-gradient(90deg, color-mix(in srgb, var(--accent) 24%, transparent) calc(var(--p, 0) * 100%), transparent 0); }
+#btnAction[data-state="busy"] { cursor: progress; background-image: linear-gradient(90deg, transparent, color-mix(in srgb, var(--accent) 22%, transparent), transparent);
+  background-size: 40% 100%; background-repeat: no-repeat; animation: tpbusy 1.4s linear infinite; }
+@keyframes tpbusy { from { background-position: -70% 0; } to { background-position: 170% 0; } }
+#btnAction[data-state="idle"] { background: transparent; border-color: var(--line); color: var(--muted); font-weight: 500; }
+#btnAction[data-state="idle"]:hover { border-color: var(--line); }
+
+/* Reiter: Zahnrad immer sichtbar, der gewählte Reiter springt nicht in der Breite */
+.tabs { overflow: visible; align-items: center; gap: 2px; }
+.tablist { display: flex; flex: 1; min-width: 0; overflow-x: auto; scrollbar-width: none; }
+.tabs [role="tab"] { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; padding: 8px 3px 7px; font-size: 13.5px; }
+.tabs [role="tab"]:hover { color: var(--text); }
+.tabs [role="tab"]:focus-visible { outline-offset: -2px; border-radius: 4px; }
+.tabs [role="tab"][aria-selected="true"] { font-weight: 400; -webkit-text-stroke: .45px currentColor; color: var(--text); border-color: var(--accent); }
+.tabs #btnSettings { flex: none; width: 32px; height: 32px; margin: 0 0 2px; padding: 0; border-radius: 50%;
+  display: grid; place-items: center; font-size: 20px; line-height: 1; color: var(--muted); }
+.tabs #btnSettings:hover { background: var(--hover); color: var(--text); }
+/* Reiter so groß wie möglich, ohne abgeschnitten zu werden (Größe rechnet fitTabs() in panel.js) */
+.tabs [role="tab"] { font-size: inherit; padding: 8px 2px 7px; }
+.tablist { font-size: 12px; }   /* fitTabs() setzt die passende Größe (10 bis 13,5 px) für Schrift und Sprache */
+@media (max-width: 359px) { .tabs [role="tab"] { padding: 8px 1px 7px; } .tabs #btnSettings { width: 28px; height: 28px; font-size: 18px; } }
+@media (max-width: 339px) { .tabs { gap: 0; } .tabs #btnSettings { width: 26px; height: 26px; outline-offset: -2px; } }
+
+/* Release-Karte */
+.now { padding: 8px; border-radius: 10px; border: 1px solid color-mix(in srgb, var(--accent) 18%, var(--line));
+  background: linear-gradient(135deg, var(--chip), var(--card) 80%); box-shadow: var(--shadow); }
+.now .cover { width: 48px; height: 48px; border-radius: 6px; box-shadow: inset 0 0 0 1px var(--ring), 0 1px 3px rgba(0, 0, 0, .14); }
+#nowCover:not([style]) { background: color-mix(in srgb, var(--accent) 12%, var(--card)); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 25%, transparent); }
+#nowCover:not([style])::before { content: "\266A"; font-size: 22px; font-weight: 400; color: var(--accent); }
+.now:has(#nowCover:not([style])) .t { font-weight: 500; color: var(--muted); }
+#nowLabel { font-size: 10.5px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; color: var(--accent-ink); }
+.nowtxt .t { font-size: 15px; line-height: 1.3; }
+.pending { border: 1px dashed color-mix(in srgb, var(--accent) 55%, var(--line)); background: color-mix(in srgb, var(--accent) 4%, transparent); }
+
+/* Tags */
+.chip { height: 22px; padding: 0 9px; border-radius: 999px; border: 1px solid transparent; background: var(--chip);
+  color: var(--accent-ink); font-size: 11px; font-weight: 500; line-height: 20px; }
+.chip:hover { border-color: color-mix(in srgb, var(--accent) 45%, transparent); }
+.chip.on { background: var(--accent-strong); border-color: var(--accent-strong); color: var(--on-accent); }
+.chip.off { background: color-mix(in srgb, var(--danger) 10%, transparent); border-color: color-mix(in srgb, var(--danger) 45%, transparent); color: var(--danger); }
+.chip.clear { background: none; border-color: var(--line); color: var(--muted); }
+.tagrow { gap: 0; }
+.tagin, .tagrow button { height: 26px; }
+.tagin { margin-right: 6px; }
+.tagrow button { padding: 0 9px; color: var(--muted); }
+.tagrow button:hover { color: var(--text); position: relative; z-index: 1; }
+.tagrow button[data-tagadd="inc"] { border-radius: 6px 0 0 6px; }
+.tagrow button[data-tagadd="exc"] { border-radius: 0 6px 6px 0; margin-left: -1px; }
+
+/* Listenzeilen */
+.item { position: relative; border-radius: 8px; padding: 5px 6px; gap: 10px; }
+@media (max-width: 339px) { .item { gap: 6px; } }   /* „bei 23 von 120 Fans“ passt auch bei 320 px */
+.item:hover { background: var(--hover); }
+.item .open:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+.txt { line-height: 1.3; }
+.txt .a { font-weight: 600; }
+.txt .tags { display: flex; min-width: 0; color: var(--muted); }
+.txt .tags .cnt { flex: none; color: var(--accent-ink); font-weight: 600; }
+.txt .a:has(.fol) { display: flex; align-items: baseline; gap: 6px; }
+.txt .a .nm { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.txt .a .fol { flex: none; font-size: 11px; font-weight: 600; }
+.item.followed, .item.playing { box-shadow: none; }
+.item.followed:hover { background: color-mix(in srgb, var(--ok) 8%, var(--okbg)); }
+.item.playing:hover { background: var(--chip); }
+.item.followed::before, .item.playing::before { content: ""; position: absolute; left: 0; top: 8px; bottom: 8px; width: 3px; border-radius: 3px; background: var(--ok); }
+.item.playing::before { background: var(--accent); }
+.cover, .av { box-shadow: inset 0 0 0 1px var(--ring); }
+.cover { border-radius: 4px; }
+.score.rank { min-width: 26px; }
+.icon:hover { background: var(--hover); color: var(--text); }
+.icon.heart:hover, .heart.on:hover { color: var(--heart); }
+.icon.x:hover { color: var(--danger); background: color-mix(in srgb, var(--danger) 12%, transparent); }
+.icon:disabled, .icon[aria-disabled="true"] { opacity: .4; cursor: progress; }
+.icon:focus-visible { outline-offset: 0; }
+.item:hover .icon[data-play], .icon[data-play][aria-pressed="true"] { color: var(--accent-ink); }
+.icon[data-play][aria-pressed="true"] { background: color-mix(in srgb, var(--accent) 14%, transparent); font-size: 11px; }
+.listhead .info { padding: 4px 6px; margin: -4px -6px; border-radius: 4px; }
+/* Kopfzeile „Fan … Rang ⓘ“: gut lesbar, aber leiser als die Namen darunter */
+.listhead { font-size: 12.5px; font-weight: 600; letter-spacing: .01em; padding: 4px 6px 5px; }
+.listhead .info { font-size: 12.5px; font-weight: 600; display: inline-flex; align-items: center; gap: 4px; }
+.listhead .info .i { font-size: 16px; line-height: 1; font-weight: 400; }
+.empty { padding: 20px 12px; text-align: center; font-size: 13px; line-height: 1.5; text-wrap: balance; }
+.list { scrollbar-gutter: stable; }
+
+/* Mini-Player */
+.player { gap: 10px; padding: 8px 8px 9px 10px; background: var(--card); box-shadow: 0 -8px 16px -10px rgba(16, 32, 48, .18); }
+.pl-btn { width: 34px; height: 34px; padding: 0; border: 0; border-radius: 50%; display: grid; place-items: center;
+  background: var(--accent-strong); color: var(--on-accent); font-size: 12px; line-height: 1; box-shadow: var(--shadow); }
+.pl-btn:hover { background: color-mix(in srgb, var(--accent-strong), var(--text) 14%); }
+.pl-btn.paused { padding-left: 2px; font-size: 13px; }
+.pl-btn.loading::after { content: ""; width: 13px; height: 13px; border-radius: 50%;
+  border: 2px solid currentColor; border-right-color: transparent; animation: tpspin .8s linear infinite; }
+@keyframes tpspin { to { transform: rotate(360deg); } }
+.pl-top { align-items: baseline; margin-bottom: 7px; }
+.pl-title { font-weight: 600; }
+.pl-time { font-size: 11px; }
+.pl-bar { height: 4px; border-radius: 2px; background: var(--line); }
+.pl-bar::before { content: ""; position: absolute; inset: -8px 0; }   /* größere Trefferfläche */
+.pl-buf { border-radius: inherit; background: var(--muted); opacity: .3; }
+.pl-prog { border-radius: inherit; background: var(--accent); }
+.pl-prog::after { content: ""; position: absolute; right: -5px; top: 50%; width: 10px; height: 10px; margin-top: -5px;
+  border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 2px var(--card); transform: scale(0); transition: transform .12s; }
+.pl-bar:hover .pl-prog::after, .pl-bar:focus-visible .pl-prog::after { transform: scale(1); }
+.pl-bar:focus-visible { outline: 2px solid var(--accent); outline-offset: 5px; }
+.player .pl-skip { width: 26px; height: 30px; padding: 0; border: 0; border-radius: 6px; display: grid; place-items: center; font-size: 13px; flex: none; color: var(--muted); }
+.player .pl-skip:hover:not(:disabled) { background: var(--hover); color: var(--text); }
+.player .pl-skip:disabled { opacity: .3; }
+.player:has(.pl-skip) { gap: 6px; }
+/* 0.9.43: größerer Player mit Wellenform statt Linie (gespielter Teil in der Akzentfarbe) */
+.player { padding: 9px 8px 10px 8px; }
+.player .pl-btn { width: 40px; height: 40px; font-size: 15px; }
+.pl-top { font-size: 12.5px; margin-bottom: 5px; }
+.pl-bar.wave { height: 34px; background: none; border-radius: 0; }
+.pl-bar.wave::before { inset: -4px 0; }
+.pl-bar.wave .pl-buf, .pl-bar.wave .pl-prog { display: none; }
+#plWave { display: none; position: absolute; inset: 0; width: 100%; height: 100%; color: var(--accent); border-top: 0 none var(--muted); }
+.pl-bar.wave #plWave { display: block; }
+.pl-bar.wave:focus-visible { outline-offset: 3px; border-radius: 4px; }
+#plClose { width: 28px; height: 28px; padding: 0; border-radius: 50%; display: grid; place-items: center; font-size: 12px; flex: none; }
+#plClose:hover { background: var(--hover); color: var(--text); }
+
+/* Einstellungen: Abschnitte, gleich große Knöpfe, Löschen zuletzt */
+.settings { gap: 14px; padding: 0 12px; scroll-padding: 56px 0; }   /* Fokus nie unter der Kopfleiste */
+.sethead { position: sticky; top: 0; z-index: 1; margin: 0 -12px -6px; padding: 10px 12px 8px; border-bottom: 1px solid var(--line);
+  background: color-mix(in srgb, var(--bg) 90%, transparent); backdrop-filter: blur(6px); }
+.sethead h3 { font-size: 15px; }
+.setsec { display: flex; flex-direction: column; gap: 8px; }
+.setsec h4 { margin: 0; font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.setsec + .setsec, .setsec + #resetRow { border-top: 1px solid var(--line); padding-top: 12px; }
+.settings button, .settings .filebtn, .settings select, .settings input:not([type="checkbox"]) { min-height: 30px; }
+.settings label.filebtn { flex-direction: row; justify-content: center; align-items: center; position: relative; }
+.filebtn input { display: block; position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
+.filebtn:focus-within { outline: 2px solid var(--accent); outline-offset: 2px; }
+.btngrid { display: grid; grid-template-columns: 1fr; gap: 6px; }   /* eine Spalte: auch lange Übersetzungen passen in eine Zeile */
+.settings .btngrid > * { font-size: 13px; line-height: 1.25; text-align: center; padding: 5px 8px; }
+#btnCloseSettings { min-height: 28px; padding: 3px 10px; }
+
+/* Bildlaufleisten und Meldung */
+.list, .settings, .log { scrollbar-width: thin; scrollbar-color: color-mix(in srgb, var(--muted) 40%, transparent) transparent; }
+.toast { background: var(--toast-bg); color: var(--toast-fg); border-radius: 10px; padding: 9px 12px; line-height: 1.45; max-height: 50vh; overflow: auto;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, .22), 0 2px 6px rgba(0, 0, 0, .12); cursor: pointer;
+  border: 1px solid color-mix(in srgb, var(--toast-fg) 10%, transparent); }
+@media (prefers-reduced-motion: reduce) { #btnAction[data-state="busy"], .item.flash, .pl-btn.loading::after { animation: none; } }
+
+input[type="checkbox"]:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* Fenster „Ausgeblendete Lieder“ und „Wiedergabeverlauf“: Liste mit Reinhören (und Auswahl bzw. Herz), Speichern unten fest */
+#hiddenDlg, #historyDlg { gap: 8px; }
+#historyInfo { margin: 2px 0 0; line-height: 1.4; }
+.hidhead { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+.hidhead p { margin: 2px 0 0; line-height: 1.4; }
+.hidhead button { flex: none; min-height: 28px; }
+#hiddenList, #historyList { flex: 1 0 auto; overflow: visible; padding: 0 0 8px; margin: 0 -6px; scrollbar-gutter: auto; }
+.hitem .open:disabled { cursor: default; }
+.hitem .icon:disabled { opacity: .35; cursor: default; }
+.hitem.picked { background: color-mix(in srgb, var(--accent) 10%, transparent); box-shadow: inset 3px 0 0 var(--accent); }
+.pick { flex: none; min-height: 28px; padding: 3px 10px; border-radius: 999px; font-size: 12.5px; white-space: nowrap; }
+.pick { display: inline-flex; align-items: center; gap: 3px; }
+.pick .chk { visibility: hidden; }   /* Haken nimmt immer Platz ein: der Knopf und ▶ springen beim Auswählen nicht */
+.pick[aria-pressed="true"] .chk { visibility: visible; }
+.pick[aria-pressed="true"] { background: var(--accent-strong); border-color: var(--accent-strong); color: var(--on-accent); -webkit-text-stroke: .35px currentColor; }
+#btnHiddenAll:not([hidden]) { display: inline-grid; }
+#btnHiddenAll > span { grid-area: 1 / 1; }
+#btnHiddenAll > .off { visibility: hidden; }
+.dlgfoot { position: sticky; bottom: 0; margin: auto -12px 0; padding: 8px 12px; display: flex; align-items: center; justify-content: space-between;
+  gap: 8px; background: var(--bg); border-top: 1px solid var(--line); }
+.dlgfoot .primary { min-width: 110px; }
+@media (max-width: 359px) { .pick { padding: 3px 8px; font-size: 12px; } .hitem { gap: 6px; } }
+
+/* Reihenfolge seit 0.9.40: „Links geöffnet“ → Knopf → Reiter → Release-Karte direkt über der Liste */
+main { padding-top: 2px; }
+.now { margin: 8px 12px 2px; }
+#hiddenDlg, #historyDlg { bottom: max(0px, calc(var(--plh, 0px) - 1px)); scroll-padding-top: 72px; }   /* 1 px unter den Player: kein Spalt bei krummen Pixeln */   /* Player bleibt darunter sichtbar und bedienbar */
+body.dlg-play :is(#player, #plFallback) { position: fixed; inset: auto 0 0; z-index: 6; }
+.hidhead { margin-top: 4px; }   /* Fokusring von „Alle auswählen“ nicht unter der Kopfleiste */
+/* 0.9.44/0.9.48: Umschalter „Fans“ / „Tracks“ über der Release-Karte */
+.modebar { display: flex; margin: 8px 12px 0; padding: 2px; gap: 2px; border: 1px solid var(--line); border-radius: 8px; background: var(--card); }
+.modebar .seg { flex: 1 1 0; min-width: 0; border: 0; border-radius: 6px; padding: 5px 6px; font-size: 12.5px; color: var(--muted); background: none;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.modebar .seg:hover { color: var(--text); }
+.modebar .seg[aria-pressed="true"] { background: var(--chip); color: var(--text); font-weight: 700; box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 45%, transparent); }
+body:not(.on-match):not(.on-tips) .modebar, body.soul .now { display: none !important; }
+/* 0.9.49: Luft zwischen fixierter Kopfzeile (Tags, Karte) und Liste; was nach oben wegscrollt, blendet weich aus statt an der Kante abzureißen */
+.list { padding-top: 10px; -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 10px); mask-image: linear-gradient(to bottom, transparent 0, #000 10px); }
+.tagrow + .list { margin-top: 4px; }
+/* 0.9.50: schon besuchte Profile – gedämpfter Name, violetter Strich links (gefolgt und laufend haben Vorrang) */
+.item.visited .nm { color: var(--muted); font-weight: 600; }
+.item.visited:not(.followed):not(.playing)::before { content: ""; position: absolute; left: 0; top: 8px; bottom: 8px; width: 3px; border-radius: 3px; background: #8b6fd6; }
+/* 0.9.53: Dauersuche (nur „Für Dich“) und „noch nicht geprüft“ */
+.autorow { display: none; align-items: center; gap: 6px; margin: 6px 12px 0; font-size: 12px; color: var(--muted); cursor: pointer; width: fit-content; }
+body.soul .autorow { display: flex; }
+.autorow input { margin: 0; accent-color: var(--accent); }
+.autorow:has(input:checked) { color: var(--text); }
+/* 0.9.72: Fortschritt von „Für Dich“ über der Liste (vorher Fußzeile) */
+.soulprog { display: none; margin: 4px 12px 0; font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-variant-numeric: tabular-nums; }
+body.soul .soulprog:not(:empty) { display: block; }
+.txt .b .unchk { color: var(--muted); font-style: italic; }
+.txt .b .cut { color: var(--muted); }
+/* 0.9.58: Promos – Gruppenköpfe „Vorab (Pre-Order)“ und „Neu erschienen (14 Tage)“ */
+.listhead.grouphead { margin-top: 6px; }
+.listhead.grouphead:first-child { margin-top: 0; }
+/* Datum und Zahl der Käufer sind lang: nie abschneiden, notfalls umbrechen; Tags in eigener Zeile */
+/* 0.9.59: „gehört“ – gedämpfter Titel, kleines Schild hinter der Zahl, violetter Strich wie bei besuchten Profilen (laufend hat Vorrang) */
+.item.heard .txt .a { color: var(--muted); }
+.item.heard:not(.playing)::before { content: ""; position: absolute; left: 0; top: 8px; bottom: 8px; width: 3px; border-radius: 3px; background: #8b6fd6; }
+.txt .tags .heardb { flex: none; margin-left: 6px; padding: 0 5px; border: 1px solid var(--line); border-radius: 4px; font-size: 10.5px; font-weight: 600;
+  line-height: 1.45; color: var(--muted); align-self: center; }
+#promoList .txt .tags .heardb { flex: none; }
+/* Zeile über der Liste: Haken „Gehörte ausblenden“, Zahl der ausgeblendeten, „Neu sortieren“ */
+/* 0.9.60: erste Zeile bricht nie um (sonst springt die Liste, wenn „Neu sortieren“ erscheint); Zusatzinfo darunter */
+.sortrow { margin: 6px 12px 0; font-size: 12px; color: var(--muted); }
+.sortrow .sortline { display: flex; align-items: center; gap: 10px; min-height: 22px; min-width: 0; }
+.sortrow .hhopt { display: flex; align-items: center; gap: 6px; cursor: pointer; white-space: nowrap; flex: none; }
+.sortrow .bulkhide { flex: 0 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding: 1px 8px; font-size: 11.5px; border-radius: 6px; }
+/* 0.9.60: Rückfrage „Alle gehörten ausblenden“ direkt unter der Zeile (statt confirm()) */
+.sortrow .bulkask { margin: 6px 0 2px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--card, transparent); color: var(--text); }
+.sortrow .bulkask p { margin: 0 0 8px; font-size: 12px; line-height: 1.4; }
+.sortrow .bulkbtns { display: flex; justify-content: flex-end; gap: 8px; }
+.sortrow .hhinfo { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; line-height: 18px; }
+.sortrow .hhopt input { margin: 0; accent-color: var(--accent); }
+.sortrow .hhopt:has(input:checked) { color: var(--text); }
+.sortrow .hhinfo:empty { display: none; }
+.sortrow .resort { margin-left: auto; flex: none; white-space: nowrap; background: none; border: 0; padding: 2px 4px; font-size: 12px; font-weight: 600; color: var(--accent-ink); text-decoration: underline; text-underline-offset: 2px; }
+.sortrow .resort:hover { color: var(--accent-strong); }
+.sortrow + .list { margin-top: 0; }
+/* 0.9.65: 👥 – Käufer eines Tracks als Kacheln (Promos und Gefolgt); Klick öffnet das Profil */
+/* Zeilen mit 👥: Knöpfe enger zusammen, damit Text und Tags nicht umbrechen (Zeilenhöhe bleibt) */
+.item:has(.ppl) .icon:not(.ppl) { margin-left: -10px; }
+.item:has(.ppl) .icon.x { width: 24px; }
+.icon.ppl { width: 22px; color: var(--accent-ink); display: inline-grid; place-items: center; }   /* 0.9.66: Symbol in Akzentfarbe, nicht mehr blass */
+.icon.ppl:hover, .icon.ppl[aria-expanded="true"] { color: var(--accent-strong); }
+.icon.ppl[aria-expanded="true"] { background: var(--chip); }
+.icon.ppl .pplsvg { display: block; }
+/* 0.9.66: Zähltext öffnet das Leute-Fenster */
+.cnt[data-pplc] { text-decoration: underline dotted; text-underline-offset: 2px; text-decoration-color: color-mix(in srgb, currentColor 45%, transparent); }
+/* 0.9.66: wie Bandcamps „supported by“ – kleine quadratische Bilder, Name im Tooltip */
+.pplpop { position: fixed; z-index: 7; width: max-content; max-height: min(300px, calc(100vh - 16px)); overflow-y: auto; padding: 8px;
+  background: var(--card); color: var(--text); border: 1px solid var(--line); border-radius: 10px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, .18), 0 1px 3px rgba(0, 0, 0, .1); }
+.pplpop .phead { font-size: 12px; font-weight: 600; margin: 0 2px 6px; }
+.pplpop .pgrid { display: grid; grid-template-columns: repeat(auto-fill, 38px); gap: 4px; }
+.ptile { all: unset; box-sizing: border-box; cursor: pointer; position: relative; width: 38px; height: 38px; border-radius: 4px; }
+.ptile .av { width: 38px; height: 38px; border-radius: 4px; font-size: 12px; }
+.ptile:hover .av { box-shadow: 0 0 0 2px var(--accent); }
+.ptile:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.ptile.visited .av { opacity: .5; }
+.ptile .fbadge { position: absolute; right: -3px; bottom: -3px; width: 14px; height: 14px; border-radius: 50%; display: grid; place-items: center;
+  font-size: 9px; line-height: 1; font-weight: 700; color: #fff; background: var(--ok); box-shadow: 0 0 0 2px var(--card); }
+.pplpop .pmore { display: grid; place-items: center; width: 38px; height: 38px; border-radius: 4px; font-size: 11.5px; font-weight: 700; color: var(--muted); background: var(--hover); }
+.pplpop .ptip { position: absolute; z-index: 1; pointer-events: none; max-width: 220px; padding: 4px 8px; border-radius: 6px; font-size: 11.5px; line-height: 1.3;
+  background: var(--text); color: var(--bg); box-shadow: 0 2px 8px rgba(0, 0, 0, .2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pplpop .ptip .fol { display: block; font-weight: 600; color: color-mix(in srgb, var(--ok) 60%, var(--bg)); }
+/* 0.9.66: Genre-Filter in den Einstellungen (für alle Tracklisten) */
+#genreSec .ggrp { display: flex; flex-direction: column; gap: 5px; }
+#genreSec .glbl { font-size: 12.5px; font-weight: 600; }
+#genreSec .gchips { display: flex; flex-wrap: wrap; gap: 5px; }
+#genreSec .gchips:empty, #genreLoad:empty { display: none; }
+#genreSec .tagrow { margin: 0; gap: 6px; }
+#genreSec .tagin { margin: 0; height: 30px; }
+#genreSec .tagrow button { height: 30px; border-radius: 6px; flex: none; }
+#genreSec .chip { min-height: 24px; height: 24px; font-size: 12px; }
+#genreSec .chip.off { text-decoration: none; }
+#genreSec .chip span { opacity: .8; margin-left: 2px; }
+#genreSec .gsug { display: inline-flex; }
+#genreSec .gsug .chip:first-child { border-radius: 999px 0 0 999px; padding-right: 7px; }
+#genreSec .gsug .gx { border-radius: 0 999px 999px 0; margin-left: 1px; padding: 0 8px; color: var(--danger); }
+#genreClear { align-self: flex-start; }
+/* 0.9.66: Hinweis „Genre-Filter aktiv“ in der Zeile über der Liste */
+.sortrow .gfhint { background: none; border: 0; padding: 0; font: inherit; color: var(--accent-ink); text-decoration: underline; text-underline-offset: 2px; cursor: pointer; }
+.sortrow .gfhint:hover { color: var(--accent-strong); }
+/* 0.9.66: Regler direkt über der Liste – eine Zeile, lange Namen werden gekürzt (voller Text im Titel) */
+.ctlrow { display: flex; align-items: center; gap: 10px; margin: 2px 12px 2px; font-size: 12px; color: var(--muted); min-width: 0; flex-wrap: nowrap; }
+.ctlrow label { display: flex; align-items: center; gap: 4px; min-width: 0; flex: 0 1 auto; white-space: nowrap; cursor: pointer; }
+.ctlrow label > span { overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.ctlrow select { flex: none; height: 22px; padding: 0 2px; font-size: 12px; }
+.ctlrow + .list { margin-top: 0; }
+/* 0.9.66: Zeilenaufbau – Titel, Künstler · Album, (Promos: Datum/Status), „bei N …“ mit „gehört“, Tags darunter (bis 2 Zeilen) */
+.txt .st { display: block; font-size: 11px; color: var(--muted); overflow: hidden; }
+.txt .st .nw { white-space: nowrap; }   /* umbrechen nur am „·“ */
+.txt .tags .cnt { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.txt .tg { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden; overflow-wrap: anywhere;
+  font-size: 11px; line-height: 1.3; color: var(--muted); }
+.item .txt { overflow: hidden; }
+
+/* 0.9.68: Setup-Hinweis, Begrüßung beim ersten Öffnen */
+.setup .setuphint { margin: 6px 0 0; }
+.setup .setuphint:empty { display: none; }
+.welcome { position: fixed; inset: 0; z-index: 8; display: flex; align-items: center; justify-content: center; padding: 12px;
+  background: color-mix(in srgb, var(--bg) 82%, transparent); backdrop-filter: blur(3px); overflow-y: auto; }
+.welcard { width: 100%; max-width: 400px; max-height: 100%; overflow-y: auto; margin: auto; padding: 16px 16px 14px; border-radius: 12px;
+  background: var(--card); border: 1px solid var(--line); box-shadow: 0 12px 32px rgba(0, 0, 0, .18), 0 2px 6px rgba(0, 0, 0, .08);
+  display: flex; flex-direction: column; gap: 10px; font-size: 13px; line-height: 1.45; }
+.welcard h2 { margin: 0; font-size: 17px; line-height: 1.25; }
+.welsteps { margin: 0; padding: 0; list-style: none; counter-reset: wel; display: flex; flex-direction: column; gap: 6px; }
+.welsteps li { counter-increment: wel; display: flex; gap: 8px; align-items: baseline; }
+.welsteps li::before { content: counter(wel); flex: none; width: 20px; height: 20px; border-radius: 50%; display: grid; place-items: center;
+  font-size: 11px; font-weight: 700; background: var(--accent-strong); color: var(--on-accent); transform: translateY(-1px); }
+.weltabs { margin: 0; padding: 8px 10px; border-radius: 8px; background: var(--chip); display: flex; flex-direction: column; gap: 4px; }
+.weltabs dt, .weltabs dd { display: inline; margin: 0; }
+.weltabs dt { font-weight: 700; }
+.weltabs dt::after { content: ': '; }
+.weltabs dd { color: var(--muted); }
+.welnote { margin: 0; color: var(--muted); font-size: 12px; }
+#btnWelcome { align-self: stretch; min-height: 34px; margin-top: 2px; }
+button.linkbtn { all: unset; cursor: pointer; color: var(--accent-ink); font-size: 13px; align-self: flex-start; }
+button.linkbtn:hover { text-decoration: underline; }
+button.linkbtn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 3px; }

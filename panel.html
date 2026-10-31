@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>TrackPilot</title>
+<link rel="stylesheet" href="panel.css">
+</head>
+<body class="on-match">
+
+<main id="main">
+  <section id="setup" class="setup hidden">
+    <p>Trag einmal deinen Bandcamp-Benutzernamen ein, damit die Leiste weiß, womit sie vergleichen soll.</p>
+    <div class="row">
+      <input id="setupUser" placeholder="z. B. aus bandcamp.com/deinname">
+      <button id="btnSetup" class="primary">Wishlist laden</button>
+    </div>
+    <p class="muted small setuphint" id="setupHint"></p>
+  </section>
+
+  <div id="pending" class="pending hidden">
+    <div class="pendtxt"><small id="pendingInfo">Links geöffnet</small><span id="pendingTitle"></span></div>
+  </div>
+  <nav class="tabs">
+    <div class="tablist" role="tablist">
+      <button role="tab" id="tabbtn-match" data-tab="match" aria-selected="true" aria-controls="tab-match" tabindex="0" title="Fans und Tracks zum Release, der links offen ist">Aktueller Track</button>
+      <button role="tab" id="tabbtn-soul" data-tab="soul" aria-selected="false" aria-controls="tab-match" tabindex="-1" title="Fans, die mehrere deiner Releases haben, und ihre Tracks">Für Dich</button>
+      <button role="tab" id="tabbtn-scouts" data-tab="scouts" aria-selected="false" aria-controls="tab-scouts" tabindex="-1" title="Lieder, die mehrere der Fans haben, denen du folgst.">Gefolgt</button>
+      <button role="tab" id="tabbtn-promos" data-tab="promos" aria-selected="false" aria-controls="tab-promos" tabindex="-1" title="Pre-Orders und ganz neue Releases, die deine gefolgten Fans und Seelenverwandten gekauft haben.">Promos</button>
+    </div>
+    <button id="btnSettings" class="ghost" title="Einstellungen" aria-label="Einstellungen">⚙</button>
+  </nav>
+
+  <!-- 0.9.48: in „Aktueller Track“ und „Für Dich“ zwischen Fans und deren Tracks wechseln -->
+  <div class="modebar" role="group" aria-label="Ansicht">
+    <button id="viewFans" class="seg" aria-pressed="true" title="Fans mit vielen gemeinsamen Releases">Fans</button>
+    <button id="viewTracks" class="seg" aria-pressed="false" title="Lieder, die diese Fans gekauft haben">Tracks</button>
+  </div>
+
+  <!-- Release-Karte: Kopf der Fan- und Trackvorschläge, direkt über der Liste (bei „Tracksuche nach Fans“ ausgeblendet) -->
+  <section class="now">
+    <div class="cover" id="nowCover"></div>
+    <div class="nowtxt">
+      <small id="nowLabel"><span class="lbl-match">Fanvorschläge für</span><span class="lbl-tips">Trackvorschläge für</span></small>
+      <div class="t" id="nowTitle">Keine Bandcamp-Seite offen</div>
+      <small id="nowArtist"></small>
+    </div>
+  </section>
+
+  <!-- 0.9.49: Knopf und Fortschritt direkt über der Liste (unter der Release-Karte), in allen Reitern -->
+  <div class="actionrow"><button id="btnAction" class="primary">Suche starten</button></div>
+  <!-- 0.9.53: Dauersuche, nur bei „Für Dich“ -->
+  <label class="autorow" title="Startet die Suche von selbst neu, sobald Bandcamps Limit es zulässt – solange „Für Dich“ offen ist. Hält an, wenn Bandcamp bremst."><input type="checkbox" id="soulAuto"> <span>Weitersuchen lassen</span></label>
+  <div class="status" id="status"></div>
+  <!-- 0.9.72: „{a} von {b} deiner Releases durchsucht“ über der Liste, nur bei „Für Dich“ -->
+  <div class="soulprog" id="soulProg"></div>
+
+  <section id="tab-match" class="tab" role="tabpanel" aria-labelledby="tabbtn-match">
+    <ul class="list" id="matchList"></ul>
+    <ul class="list hidden" id="soulList"></ul>
+  </section>
+
+  <section id="tab-tips" class="tab hidden" role="tabpanel" aria-labelledby="tabbtn-tips">
+    <!-- 0.9.59: gehörte ausblenden, neu sortieren (die Liste bleibt sonst stehen) -->
+    <div class="sortrow" data-list="tips">
+      <div class="sortline">
+        <label class="hhopt" title="Lieder, die du hier schon angehört hast, fallen beim nächsten Neusortieren weg – nie unter dem Mauszeiger."><input type="checkbox"> <span>Gehörte ausblenden</span></label>
+        <button class="bulkhide hidden" title="Alle hier angehörten Tracks nicht mehr vorschlagen, wie ✕ – außer denen mit ♥ und dem Lied im Player.">Alle gehörten ausblenden</button>
+        <button class="resort hidden" title="Die Liste bleibt stehen, während du ♥ und ✕ klickst. Hier sortierst du sie neu.">Neu sortieren</button>
+      </div>
+      <div class="bulkask hidden" role="group"><p class="bulktxt"></p><div class="bulkbtns"><button class="small bulkno">Abbrechen</button><button class="small primary bulkyes">Ausblenden</button></div></div>
+      <div class="hhinfo muted"></div>
+    </div>
+    <!-- 0.9.66: Regler direkt über der Liste (vorher in den Einstellungen) -->
+    <div class="ctlrow" data-list="tips">
+      <label title="Seelenverwandte für Tracks"><span>Seelenverwandte</span> <select data-set="soulRefresh" aria-label="Seelenverwandte für Tracks"></select></label>
+      <label title="Gemeinsame Releases mind. – nur Fans, die so viele Releases mit dir teilen, zählen."><span>Gemeinsam ≥</span> <select data-set="minMatch" aria-label="Gemeinsame Releases mind."></select></label>
+      <label title="Fans pro Track mind. – nur Tracks, die so viele deiner Seelenverwandten gekauft haben."><span>Fans ≥</span> <select data-set="minFansTips" aria-label="Fans pro Track mind."></select></label>
+    </div>
+    <ul class="list" id="tipsList"></ul>
+  </section>
+
+  <section id="tab-scouts" class="tab hidden" role="tabpanel" aria-labelledby="tabbtn-scouts">
+    <div class="hintrow">
+      <p class="hint" id="scoutInfo">Lieder, die mehrere der Fans haben, denen du folgst.</p>
+    </div>
+    <!-- 0.9.59: gehörte ausblenden, neu sortieren (die Liste bleibt sonst stehen) -->
+    <div class="sortrow" data-list="scouts">
+      <div class="sortline">
+        <label class="hhopt" title="Lieder, die du hier schon angehört hast, fallen beim nächsten Neusortieren weg – nie unter dem Mauszeiger."><input type="checkbox"> <span>Gehörte ausblenden</span></label>
+        <button class="bulkhide hidden" title="Alle hier angehörten Tracks nicht mehr vorschlagen, wie ✕ – außer denen mit ♥ und dem Lied im Player.">Alle gehörten ausblenden</button>
+        <button class="resort hidden" title="Die Liste bleibt stehen, während du ♥ und ✕ klickst. Hier sortierst du sie neu.">Neu sortieren</button>
+      </div>
+      <div class="bulkask hidden" role="group"><p class="bulktxt"></p><div class="bulkbtns"><button class="small bulkno">Abbrechen</button><button class="small primary bulkyes">Ausblenden</button></div></div>
+      <div class="hhinfo muted"></div>
+    </div>
+    <!-- 0.9.66: Regler direkt über der Liste (vorher in den Einstellungen) -->
+    <div class="ctlrow" data-list="scouts">
+      <label title="Gemeinsame Releases mind. – nur Fans, die so viele Releases mit dir teilen, zählen."><span>Gemeinsam ≥</span> <select data-set="minMatch" aria-label="Gemeinsame Releases mind."></select></label>
+      <label title="Fans pro Track mind. – nur Tracks, die so viele deiner gefolgten Fans gekauft haben."><span>Fans ≥</span> <select data-set="minFansScouts" aria-label="Fans pro Track mind."></select></label>
+    </div>
+    <ul class="list" id="scoutList"></ul>
+  </section>
+
+  <!-- 0.9.58: Pre-Orders und ganz neue Releases, die deine Leute gekauft haben -->
+  <section id="tab-promos" class="tab hidden" role="tabpanel" aria-labelledby="tabbtn-promos">
+    <div class="hintrow">
+      <p class="hint" id="promoInfo">Pre-Orders und ganz neue Releases, die deine gefolgten Fans und Seelenverwandten gekauft haben.</p>
+    </div>
+    <!-- 0.9.59: gehörte ausblenden, neu sortieren (die Liste bleibt sonst stehen) -->
+    <div class="sortrow" data-list="promos">
+      <div class="sortline">
+        <label class="hhopt" title="Lieder, die du hier schon angehört hast, fallen beim nächsten Neusortieren weg – nie unter dem Mauszeiger."><input type="checkbox"> <span>Gehörte ausblenden</span></label>
+        <button class="bulkhide hidden" title="Alle hier angehörten Tracks nicht mehr vorschlagen, wie ✕ – außer denen mit ♥ und dem Lied im Player.">Alle gehörten ausblenden</button>
+        <button class="resort hidden" title="Die Liste bleibt stehen, während du ♥ und ✕ klickst. Hier sortierst du sie neu.">Neu sortieren</button>
+      </div>
+      <div class="bulkask hidden" role="group"><p class="bulktxt"></p><div class="bulkbtns"><button class="small bulkno">Abbrechen</button><button class="small primary bulkyes">Ausblenden</button></div></div>
+      <div class="hhinfo muted"></div>
+    </div>
+    <ul class="list" id="promoList"></ul>
+  </section>
+</main>
+
+<section id="settings" class="settings hidden" role="dialog" aria-modal="true" aria-labelledby="setTitle">
+  <div class="sethead"><h3 id="setTitle">Einstellungen</h3><button id="btnCloseSettings">Zurück</button></div>
+  <div class="setsec"><h4>Konto</h4>
+    <label>Bandcamp-Benutzername <input id="username"></label>
+    <label class="check" title="Grundlage sind deine Käufe. Mit Haken zählt auch deine Wishlist mit."><input type="checkbox" id="optWishlist" checked> Wishlist zusätzlich einbeziehen</label>
+    <label title="Welche Käufer eines Releases geprüft werden">Fans pro Release <select id="optFanOrder">
+      <option value="new" title="Die Käufer, die den Release zuletzt gekauft haben">Neueste Käufer</option>
+      <option value="first" title="Die Käufer, die den Release als Erste gekauft haben. Bei großen Releases ein paar Anfragen mehr, weil die ganze Käuferliste gelesen wird.">Erste Käufer</option>
+    </select></label>
+    <p class="muted small" id="fanOrderHint">Neueste: wer den Release zuletzt gekauft hat. Erste: wer ihn als Erstes hatte.</p>
+    <button id="btnLoadMe" class="primary">Wishlist laden / aktualisieren</button>
+    <div id="meInfo" class="muted small"></div>
+  </div>
+  <div class="setsec"><h4>Anzeige</h4>
+    <div class="setgrid">
+      <label>Sprache <select id="optLang"></select></label>
+      <label>Darstellung <select id="optTheme">
+        <option value="system">Wie das System</option><option value="light">Hell</option><option value="dark">Dunkel</option>
+      </select></label>
+    </div>
+    <label class="check" title="Feste Leiste unten auf Bandcamp, sobald etwas spielt – mit Wellenform und BPM."><input type="checkbox" id="optPlayerBar" checked> Player-Leiste auf Bandcamp</label>
+    <p class="muted small keyhint">Tastenkürzel: <kbd id="keyName">Alt + T</kbd> blendet die Leiste aus und wieder ein. Ändern unter chrome://extensions/shortcuts</p>
+  </div>
+  <!-- 0.9.56: was in die Vorschläge einfließt -->
+  <div class="setsec"><h4>Vorschläge</h4>
+    <label class="check" title="Höchstens 4 Tracks mit demselben Haupt-Tag unter je 10 Vorschlägen."><input type="checkbox" id="optVariety" checked> Mehr Abwechslung</label>
+    <label class="check" title="Käufe der letzten 12 Monate zählen stärker, ältere als 3 Jahre schwächer."><input type="checkbox" id="optPreferNew"> Neuere bevorzugen</label>
+    <label class="check" title="Tracks von Künstlern aus deiner Sammlung, Wishlist oder mit ♥ kommen weiter nach oben."><input type="checkbox" id="optKnownArtists" checked> Bekannte Künstler bevorzugen</label>
+    <p class="muted small">Die Regler für Gefolgt und Für Dich sitzen jetzt direkt über der jeweiligen Liste.</p>
+  </div>
+  <!-- 0.9.66: ein Genre-Filter für alle Tracklisten (vorher je Liste über der Liste) -->
+  <div class="setsec" id="genreSec"><h4>Genres</h4>
+    <p class="muted small">Gilt für alle Tracklisten.</p>
+    <div class="ggrp">
+      <span class="glbl">Nur diese Genres zeigen</span>
+      <div class="gchips" id="genreInc"></div>
+      <div class="tagrow"><input class="tagin" id="genreIncIn" list="tagSuggest" placeholder="Genre, z. B. house" aria-label="Nur diese Genres zeigen"><button class="small" data-genreadd="inc" title="Nur Lieder mit diesem Tag zeigen">+ Zeigen</button></div>
+    </div>
+    <div class="ggrp">
+      <span class="glbl">Diese Genres ausblenden</span>
+      <div class="gchips" id="genreExc"></div>
+      <div class="tagrow"><input class="tagin" id="genreExcIn" list="tagSuggest" placeholder="Genre, z. B. dubstep" aria-label="Diese Genres ausblenden"><button class="small" data-genreadd="exc" title="Lieder mit diesem Tag ausblenden">− Ausblenden</button></div>
+    </div>
+    <div class="ggrp">
+      <span class="glbl">Häufig in deinen Listen</span>
+      <div class="gchips" id="genreSugg"></div>
+      <small class="muted" id="genreLoad"></small>
+    </div>
+    <button class="small hidden" id="genreClear">Alle Genre-Filter aus</button>
+  </div>
+  <div class="setsec"><h4>Daten</h4>
+    <div class="btngrid">
+      <button id="btnExport">Datenbank exportieren</button>
+      <label class="filebtn">Datenbank importieren <input type="file" id="fileImport" accept="application/json"></label>
+      <button id="btnUnhide">Ausgeblendete zurückholen</button>
+      <button id="btnHistory">Wiedergabeverlauf</button>
+      <button id="btnClearCache" title="Löscht gespeicherte Fan-Profile, Käuferlisten und Tags. Wishlist, Likes, Ausgeblendete, Verlauf und Einstellungen bleiben.">Cache leeren</button>
+    </div>
+  </div>
+  <!-- 0.9.68: Begrüßung wieder aufrufen -->
+  <div class="setsec"><h4>Hilfe</h4>
+    <button id="btnWelcomeAgain" class="linkbtn">Begrüßung erneut zeigen</button>
+    <p id="operaHint" class="muted small hidden">Opera: TrackPilot in der Seitenleiste anheften – unten in der Seitenleiste auf „…“ → Seitenleisten-Einstellungen → Erweiterungen → TrackPilot.</p>
+  </div>
+  <!-- 0.9.78: Protokoll nicht mehr sichtbar – läuft unsichtbar weiter (nur im Speicher der offenen Leiste) -->
+  <div id="log" class="log" hidden></div>
+  <div class="row" id="resetRow"><button id="btnReset" class="danger">Alles löschen</button></div>
+</section>
+
+<!-- 0.9.68: Begrüßung beim ersten Öffnen (Speicher: welcomed) -->
+<section id="welcome" class="welcome hidden" role="dialog" aria-modal="true" aria-labelledby="welTitle">
+  <div class="welcard">
+    <h2 id="welTitle">Willkommen bei TrackPilot</h2>
+    <ol class="welsteps">
+      <li>Bei Bandcamp einloggen und oben auf „Wishlist laden“ drücken.</li>
+      <li>Ein Album oder einen Track auf Bandcamp öffnen.</li>
+      <li>Oben auf den Knopf drücken – TrackPilot sucht Fans, die deinen Geschmack teilen.</li>
+    </ol>
+    <dl class="weltabs">
+      <div><dt>Aktueller Track</dt><dd>Fans und Tipps zum offenen Release</dd></div>
+      <div><dt>Für Dich</dt><dd>Seelenverwandte aus deiner ganzen Sammlung</dd></div>
+      <div><dt>Gefolgt</dt><dd>Käufe der Fans, denen du folgst</dd></div>
+      <div><dt>Promos</dt><dd>Pre-Orders und neue Releases deiner Leute</dd></div>
+    </dl>
+    <p class="welnote">Bandcamp begrenzt Anfragen – TrackPilot bremst sich selbst, Suchen laufen darum etwas ruhiger.</p>
+    <p class="welnote">Alles bleibt lokal in deinem Browser.</p>
+    <button id="btnWelcome" class="primary">Los geht’s</button>
+  </div>
+</section>
+
+<section id="hiddenDlg" class="settings hidden" role="dialog" aria-modal="true" aria-labelledby="hiddenTitle">
+  <div class="sethead"><h3 id="hiddenTitle">Ausgeblendete Lieder</h3><button id="btnHiddenCancel">Abbrechen</button></div>
+  <div class="hidhead"><p class="muted small" id="hiddenInfo"></p><button id="btnHiddenAll" class="small">Alle auswählen</button></div>
+  <ul class="list" id="hiddenList"></ul>
+  <footer class="dlgfoot"><span class="muted small" id="hiddenCount"></span><button id="btnHiddenSave" class="primary">Speichern</button></footer>
+</section>
+
+<section id="historyDlg" class="settings hidden" role="dialog" aria-modal="true" aria-labelledby="historyTitle">
+  <div class="sethead"><h3 id="historyTitle">Wiedergabeverlauf</h3><button id="btnHistoryClose">Zurück</button></div>
+  <p class="muted small" id="historyInfo"></p>
+  <ul class="list" id="historyList"></ul>
+</section>
+
+<footer id="player" class="player hidden">
+  <button class="ghost pl-skip" id="plPrev" title="Vorheriges Lied" aria-label="Vorheriges Lied"><svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" focusable="false"><path d="M3 2.5h2v11H3zM14 2.8v10.4L6 8z" fill="currentColor"/></svg></button>
+  <button class="pl-btn" id="plBtn" title="Abspielen" aria-label="Abspielen">▶</button>
+  <button class="ghost pl-skip" id="plNext" title="Nächstes Lied" aria-label="Nächstes Lied"><svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" focusable="false"><path d="M11 2.5h2v11h-2zM2 2.8v10.4L10 8z" fill="currentColor"/></svg></button>
+  <div class="pl-main">
+    <div class="pl-top" title="Zum Lied in der Liste springen"><span class="pl-title" id="plTitle"></span><span class="pl-time" id="plTime">lädt …</span></div>
+    <div class="pl-bar" id="plBar" role="slider" tabindex="0" aria-label="Position im Lied" aria-valuemin="0" aria-valuemax="0" aria-valuenow="0"><div class="pl-buf" id="plBuf"></div><div class="pl-prog" id="plProg"></div><canvas id="plWave" aria-hidden="true"></canvas></div>
+  </div>
+  <button class="ghost" id="plClose" title="Schließen" aria-label="Schließen">✕</button>
+</footer>
+<div id="plFallback" class="hidden"></div>
+
+<div id="pplPop" class="pplpop hidden" role="dialog" aria-label="Wer hat das gekauft?"></div>
+<div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
+<datalist id="tagSuggest"></datalist>
+<script src="i18n.js"></script>
+<script src="bpm.js"></script>
+<script src="panel.js"></script>
+</body>
+</html>
