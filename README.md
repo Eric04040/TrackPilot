@@ -28,7 +28,7 @@ TrackPilot is an unofficial side panel for Bandcamp in Chrome and Opera. Open an
 
 TrackPilot is not in the Chrome Web Store. You load it as an unpacked extension:
 
-1. On GitHub click **Code → Download ZIP** and unzip the file.
+1. Download the latest **TrackPilot-x.y.z.zip** from [Releases](../../releases/latest) and unzip it.
 2. Open `chrome://extensions`.
 3. Turn on **Developer mode** (top right).
 4. Click **Load unpacked** and pick the unzipped folder (the one that contains `manifest.json`).
@@ -90,7 +90,7 @@ TrackPilot ist eine inoffizielle Seitenleiste für Bandcamp in Chrome und Opera.
 
 TrackPilot steht nicht im Chrome Web Store. Du lädst es als entpackte Erweiterung:
 
-1. Auf GitHub **Code → Download ZIP** klicken und die Datei entpacken.
+1. Unter [Releases](../../releases/latest) die neueste **TrackPilot-x.y.z.zip** herunterladen und entpacken.
 2. `chrome://extensions` öffnen.
 3. Oben rechts den **Entwicklermodus** einschalten.
 4. **Entpackte Erweiterung laden** klicken und den entpackten Ordner wählen (den, in dem `manifest.json` liegt).
